@@ -4,6 +4,9 @@ import java.util.Base64;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class APIContext extends BaseAPIContext {
+	
+	public final static String MULTI = "MULTI";
+	public final static String SINGLE = "SINGLE";
 
 	private String accessToken;
 

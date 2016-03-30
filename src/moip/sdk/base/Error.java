@@ -10,24 +10,30 @@ public class Error {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public Error setCode(String code) {
 		this.code = code;
+
+		return this;
 	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public void setPath(String path) {
+	public Error setPath(String path) {
 		this.path = path;
+
+		return this;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public Error setDescription(String description) {
 		this.description = description;
+
+		return this;
 	}
 
 }

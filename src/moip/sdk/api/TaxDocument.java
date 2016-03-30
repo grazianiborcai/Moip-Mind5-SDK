@@ -8,15 +8,19 @@ public class TaxDocument {
 		return type;
 	}
 
-	public void setType(String type) {
+	public TaxDocument setType(String type) {
 		this.type = type;
+		
+		return this;
 	}
 
 	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(String number) {
+	public TaxDocument setNumber(String number) {
 		this.number = number;
+		
+		return this;
 	}
 }

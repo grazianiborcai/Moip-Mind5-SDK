@@ -8,15 +8,19 @@ public class FundingInstrument {
 		return method;
 	}
 
-	public void setMethod(String method) {
+	public FundingInstrument setMethod(String method) {
 		this.method = method;
+		
+		return this;
 	}
 
 	public CreditCard getCreditCard() {
 		return creditCard;
 	}
 
-	public void setCreditCard(CreditCard creditCard) {
+	public FundingInstrument setCreditCard(CreditCard creditCard) {
 		this.creditCard = creditCard;
+		
+		return this;
 	}
 }
