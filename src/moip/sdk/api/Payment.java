@@ -14,28 +14,25 @@ public class Payment extends HttpsBase {
 	public final static String MULTI = "MULTI";
 	public final static String SINGLE = "SINGLE";
 
-	public final static String MULTI_PATH_1 = "multiorders/";
-	public final static String MULTI_PATH_2 = "/multipayments";
-	public final static String SINGLE_PATH_1 = "orders/";
-	public final static String SINGLE_PATH_2 = "/payments";
+	public final static String MULTI_PATH_1 = "multiorders";
+	public final static String MULTI_PATH_2 = "multipayments";
+	public final static String SINGLE_PATH_1 = "orders";
+	public final static String SINGLE_PATH_2 = "payments";
 
-	private static String path;
-	private static String type;
+	// private static String pathPost;
+	private String type;
 
 	private String id;
 	private String status;
 	private Amount amount;
 	private List<Payment> payments;
-	private int installmentCount;
+	private Integer installmentCount;
 	private FundingInstrument fundingInstrument;
+	private List<moip.sdk.base.Error> errors;
 
-	public Payment(String type, String orderId) {
+	public Payment(String type, String id) {
 		this.type = type;
-		if (type == MULTI) {
-			path = MULTI_PATH_1 + orderId + MULTI_PATH_2;
-		} else if (type == SINGLE) {
-			path = SINGLE_PATH_1 + orderId + SINGLE_PATH_2;
-		}
+		this.id = id;
 	}
 
 	public String getId() {
@@ -70,11 +67,11 @@ public class Payment extends HttpsBase {
 		this.payments = payments;
 	}
 
-	public int getInstallmentCount() {
+	public Integer getInstallmentCount() {
 		return installmentCount;
 	}
 
-	public void setInstallmentCount(int installmentCount) {
+	public void setInstallmentCount(Integer installmentCount) {
 		this.installmentCount = installmentCount;
 	}
 
@@ -87,7 +84,67 @@ public class Payment extends HttpsBase {
 		fundingInstrument.setMethod(CREDIT_CARD);
 	}
 
+	public List<moip.sdk.base.Error> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<moip.sdk.base.Error> errors) {
+		this.errors = errors;
+	}
+
 	public Payment create(APIContext apiContext) {
+		checkApiContext(apiContext);
+		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
+		String pathPost = null;
+		if (type.equals(MULTI)) {
+			apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getoAuthToken());
+			pathPost = MULTI_PATH_1 + "/" + id + "/" + MULTI_PATH_2;
+		} else if (type.equals(SINGLE)) {
+			apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getAccessToken());
+			pathPost = SINGLE_PATH_1 + "/" + id + "/" + SINGLE_PATH_2;
+		}
+		String payLoad = new Gson().toJsonTree(this).toString();
+
+		return configureAndExecute(apiContext, HttpMethod.POST, pathPost, payLoad, Payment.class);
+	}
+
+	public Payment createAndAuthorized(APIContext apiContext) {
+
+		Payment paymentCreated = create(apiContext);
+
+		if (paymentCreated.getErrors() == null)
+			for (int i = 0; i < 5; i++) {
+				if (!paymentCreated.getStatus().equals("AUTHORIZED"))
+					paymentCreated = get(apiContext, paymentCreated.getId());
+				else
+					i = 5;
+			}
+
+		return paymentCreated;
+
+	}
+
+	public Payment get(APIContext apiContext) {
+
+		return get(apiContext, id);
+	}
+
+	private Payment get(APIContext apiContext, String paymentId) {
+		checkApiContext(apiContext);
+		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
+		String pathGet = null;
+		if (type.equals(MULTI)) {
+			apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getoAuthToken());
+			pathGet = MULTI_PATH_2 + "/" + paymentId;
+		} else if (type.equals(SINGLE)) {
+			apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getAccessToken());
+			pathGet = SINGLE_PATH_2 + "/" + paymentId;
+		}
+
+		return configureAndExecute(apiContext, HttpMethod.GET, pathGet, null, Payment.class);
+	}
+
+	private void checkApiContext(APIContext apiContext) {
 		if (apiContext == null) {
 			throw new IllegalArgumentException("APIContext cannot be null");
 		}
@@ -100,13 +157,6 @@ public class Payment extends HttpsBase {
 		if (apiContext.getHTTPHeaders() == null) {
 			apiContext.setHTTPHeaders(new ConcurrentHashMap<String, String>());
 		}
-		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
-		if (type.equals(MULTI))
-			apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getoAuthToken());
-		else if (type.equals(SINGLE))
-			apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getAccessToken());
-		String payLoad = new Gson().toJsonTree(this).toString();
-
-		return configureAndExecute(apiContext, HttpMethod.POST, path, payLoad, Payment.class);
 	}
+
 }
