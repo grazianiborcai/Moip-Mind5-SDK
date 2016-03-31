@@ -2,7 +2,7 @@ package moip.sdk.api;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//teste
 public class Customer {
 	private String id;
 	private String ownId;
