@@ -19,7 +19,7 @@ public class APIContext extends BaseAPIContext {
 			throw new IllegalArgumentException("User, password or oAuthToken cannot be null");
 		}
 		String login = user + ":" + passwork;
-		this.accessToken = Base64.getEncoder().encodeToString(login.getBytes()).replace("\n", "");
+		this.accessToken ="Basic " + Base64.getEncoder().encodeToString(login.getBytes()).replace("\n", "");
 		this.oAuthToken = oAuthToken;
 	}
 

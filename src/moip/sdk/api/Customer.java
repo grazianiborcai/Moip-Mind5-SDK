@@ -1,9 +1,21 @@
 package moip.sdk.api;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-//teste
-public class Customer {
+
+import org.apache.http.client.ClientProtocolException;
+
+import com.google.gson.Gson;
+
+import moip.sdk.base.APIContext;
+import moip.sdk.base.HttpMethod;
+import moip.sdk.base.HttpsBase;
+
+public class Customer extends HttpsBase {
+
+	public final static String PATH = "customers";
+
 	private String id;
 	private String ownId;
 
@@ -18,6 +30,14 @@ public class Customer {
 	private Phone phone;
 	private List<FundingInstrument> fundingInstruments;
 	private String createdAt;
+
+	public Customer() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Customer(String id) {
+		this.id = id;
+	}
 
 	public String getId() {
 		return id;
@@ -138,7 +158,7 @@ public class Customer {
 
 		return this;
 	}
-	
+
 	public Customer addFunding(FundingInstrument fundingInstrument) {
 		if (getFundingInstruments() == null)
 			setFundingInstruments(new ArrayList<FundingInstrument>());
@@ -146,6 +166,35 @@ public class Customer {
 		getFundingInstruments().add(fundingInstrument);
 
 		return this;
+	}
+
+	public Customer create(APIContext apiContext) throws ClientProtocolException, IOException {
+		checkApiContext(apiContext);
+		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
+		apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getAccessToken());
+
+		String payLoad = new Gson().toJsonTree(this).toString();
+
+		return configureAndExecute(apiContext, HttpMethod.POST, PATH, payLoad, Customer.class);
+	}
+
+	public Customer get(APIContext apiContext) throws ClientProtocolException, IOException {
+
+		return get(apiContext, id);
+	}
+
+	private Customer get(APIContext apiContext, String customerId) throws ClientProtocolException, IOException {
+		if (customerId != null) {
+			checkApiContext(apiContext);
+			apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
+			String pathGet = null;
+			apiContext.getHTTPHeaders().put(AUTHORIZATION_HEADER, apiContext.getAccessToken());
+			pathGet = PATH + "/" + customerId;
+
+			return configureAndExecute(apiContext, HttpMethod.GET, pathGet, null, Customer.class);
+		} else
+			return null;
+
 	}
 
 }

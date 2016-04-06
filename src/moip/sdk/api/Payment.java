@@ -1,7 +1,10 @@
 package moip.sdk.api;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.http.client.ClientProtocolException;
 
 import com.google.gson.Gson;
 
@@ -45,7 +48,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setId(String id) {
 		this.id = id;
-		
+
 		return this;
 	}
 
@@ -55,7 +58,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setStatus(String status) {
 		this.status = status;
-		
+
 		return this;
 	}
 
@@ -65,7 +68,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setDelayCapture(Boolean delayCapture) {
 		this.delayCapture = delayCapture;
-		
+
 		return this;
 	}
 
@@ -75,7 +78,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setAmount(Amount amount) {
 		this.amount = amount;
-		
+
 		return this;
 	}
 
@@ -85,7 +88,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setPayments(List<Payment> payments) {
 		this.payments = payments;
-		
+
 		return this;
 	}
 
@@ -95,7 +98,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setInstallmentCount(Integer installmentCount) {
 		this.installmentCount = installmentCount;
-		
+
 		return this;
 	}
 
@@ -106,7 +109,7 @@ public class Payment extends HttpsBase {
 	public Payment setFundingInstrument(FundingInstrument fundingInstrument) {
 		this.fundingInstrument = fundingInstrument;
 		fundingInstrument.setMethod(CREDIT_CARD);
-		
+
 		return this;
 	}
 
@@ -116,7 +119,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setFees(List<Fee> fees) {
 		this.fees = fees;
-		
+
 		return this;
 	}
 
@@ -126,7 +129,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setEvents(List<Event> events) {
 		this.events = events;
-		
+
 		return this;
 	}
 
@@ -136,7 +139,7 @@ public class Payment extends HttpsBase {
 
 	public Payment set_links(Links _links) {
 		this._links = _links;
-		
+
 		return this;
 	}
 
@@ -146,7 +149,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
-		
+
 		return this;
 	}
 
@@ -156,7 +159,7 @@ public class Payment extends HttpsBase {
 
 	public Payment setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
-		
+
 		return this;
 	}
 
@@ -166,11 +169,11 @@ public class Payment extends HttpsBase {
 
 	public Payment setErrors(List<moip.sdk.base.Error> errors) {
 		this.errors = errors;
-		
+
 		return this;
 	}
 
-	public Payment create(APIContext apiContext) {
+	public Payment create(APIContext apiContext) throws ClientProtocolException, IOException {
 		checkApiContext(apiContext);
 		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
 		String pathPost = null;
@@ -186,7 +189,7 @@ public class Payment extends HttpsBase {
 		return configureAndExecute(apiContext, HttpMethod.POST, pathPost, payLoad, Payment.class);
 	}
 
-	public Payment createAndAuthorized(APIContext apiContext) {
+	public Payment createAndAuthorized(APIContext apiContext) throws ClientProtocolException, IOException {
 
 		Payment paymentCreated = create(apiContext);
 
@@ -210,12 +213,12 @@ public class Payment extends HttpsBase {
 
 	}
 
-	public Payment get(APIContext apiContext) {
+	public Payment get(APIContext apiContext) throws ClientProtocolException, IOException {
 
 		return get(apiContext, id);
 	}
 
-	private Payment get(APIContext apiContext, String paymentId) {
+	private Payment get(APIContext apiContext, String paymentId) throws ClientProtocolException, IOException {
 		checkApiContext(apiContext);
 		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
 		String pathGet = null;
@@ -228,21 +231,6 @@ public class Payment extends HttpsBase {
 		}
 
 		return configureAndExecute(apiContext, HttpMethod.GET, pathGet, null, Payment.class);
-	}
-
-	private void checkApiContext(APIContext apiContext) {
-		if (apiContext == null) {
-			throw new IllegalArgumentException("APIContext cannot be null");
-		}
-		if (apiContext.getAccessToken() == null || apiContext.getAccessToken().trim().length() <= 0) {
-			throw new IllegalArgumentException("AccessToken cannot be null or empty");
-		}
-		if (apiContext.getoAuthToken() == null || apiContext.getoAuthToken().trim().length() <= 0) {
-			throw new IllegalArgumentException("OAuthToken() cannot be null or empty");
-		}
-		if (apiContext.getHTTPHeaders() == null) {
-			apiContext.setHTTPHeaders(new ConcurrentHashMap<String, String>());
-		}
 	}
 
 }

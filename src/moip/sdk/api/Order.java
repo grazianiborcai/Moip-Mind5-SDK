@@ -1,8 +1,11 @@
 package moip.sdk.api;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.http.client.ClientProtocolException;
 
 import com.google.gson.Gson;
 
@@ -223,7 +226,7 @@ public class Order extends HttpsBase {
 		return this;
 	}
 
-	public Order create(APIContext apiContext) {
+	public Order create(APIContext apiContext) throws ClientProtocolException, IOException {
 		checkApiContext(apiContext);
 		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
 		String pathPost = null;
@@ -239,12 +242,12 @@ public class Order extends HttpsBase {
 		return configureAndExecute(apiContext, HttpMethod.POST, pathPost, payLoad, Order.class);
 	}
 
-	public Order get(APIContext apiContext) {
+	public Order get(APIContext apiContext) throws ClientProtocolException, IOException {
 
 		return get(apiContext, id);
 	}
 
-	public Order getAll(APIContext apiContext) {
+	public Order getAll(APIContext apiContext) throws ClientProtocolException, IOException {
 		if (type.equals(APIContext.SINGLE)) {
 			checkApiContext(apiContext);
 			apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
@@ -256,7 +259,7 @@ public class Order extends HttpsBase {
 
 	}
 
-	private Order get(APIContext apiContext, String orderId) {
+	private Order get(APIContext apiContext, String orderId) throws ClientProtocolException, IOException {
 		if (orderId != null) {
 			checkApiContext(apiContext);
 			apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
@@ -273,21 +276,6 @@ public class Order extends HttpsBase {
 		} else
 			return null;
 
-	}
-
-	private void checkApiContext(APIContext apiContext) {
-		if (apiContext == null) {
-			throw new IllegalArgumentException("APIContext cannot be null");
-		}
-		if (apiContext.getAccessToken() == null || apiContext.getAccessToken().trim().length() <= 0) {
-			throw new IllegalArgumentException("AccessToken cannot be null or empty");
-		}
-		if (apiContext.getoAuthToken() == null || apiContext.getoAuthToken().trim().length() <= 0) {
-			throw new IllegalArgumentException("OAuthToken() cannot be null or empty");
-		}
-		if (apiContext.getHTTPHeaders() == null) {
-			apiContext.setHTTPHeaders(new ConcurrentHashMap<String, String>());
-		}
 	}
 
 }
