@@ -7,6 +7,7 @@ public class Amount {
 	private Integer liquid;
 	private Integer otherReceivers;
 	private Integer fixed;
+	private Integer percentual;
 	private String currency;
 	private SubTotals subtotals;
 	
@@ -67,6 +68,16 @@ public class Amount {
 
 	public Amount setFixed(Integer fixed) {
 		this.fixed = fixed;
+		
+		return this;
+	}
+
+	public Integer getPercentual() {
+		return percentual;
+	}
+
+	public Amount setPercentual(Integer percentual) {
+		this.percentual = percentual;
 		
 		return this;
 	}
