@@ -36,6 +36,7 @@ public class Payment extends HttpsBase {
 	private String createdAt;
 	private String updatedAt;
 	private List<moip.sdk.base.Error> errors;
+	private String ERROR;
 
 	public Payment(String type, String id) {
 		this.type = type;
@@ -173,6 +174,16 @@ public class Payment extends HttpsBase {
 		return this;
 	}
 
+	public String getERROR() {
+		return ERROR;
+	}
+
+	public Payment setERROR(String eRROR) {
+		ERROR = eRROR;
+		
+		return this;
+	}
+
 	public Payment create(APIContext apiContext) throws ClientProtocolException, IOException {
 		checkApiContext(apiContext);
 		apiContext.getHTTPHeaders().put(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON);
@@ -193,7 +204,7 @@ public class Payment extends HttpsBase {
 
 		Payment paymentCreated = create(apiContext);
 
-		if (paymentCreated.getErrors() == null) {
+		if (paymentCreated.getId() != null) {
 			int wait = 4;
 			for (int i = 0; i < wait; i++) {
 				if (!paymentCreated.getStatus().equals("AUTHORIZED")) {

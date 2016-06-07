@@ -35,6 +35,7 @@ public class Order extends HttpsBase {
 	private Links _links;
 	private Summary summary;
 	private List<moip.sdk.base.Error> errors;
+	private String ERROR;
 
 	public Order() {
 
@@ -223,6 +224,16 @@ public class Order extends HttpsBase {
 
 		getReceivers().add(receiver);
 
+		return this;
+	}
+
+	public String getERROR() {
+		return ERROR;
+	}
+
+	public Order setERROR(String eRROR) {
+		ERROR = eRROR;
+		
 		return this;
 	}
 
