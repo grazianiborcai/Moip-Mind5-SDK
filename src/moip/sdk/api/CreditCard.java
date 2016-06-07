@@ -9,30 +9,24 @@ public class CreditCard {
 		return id;
 	}
 
-	public CreditCard setId(String id) {
+	public void setId(String id) {
 		this.id = id;
-		
-		return this;
 	}
 
 	public String getHash() {
 		return hash;
 	}
 
-	public CreditCard setHash(String hash) {
+	public void setHash(String hash) {
 		this.hash = hash;
-		
-		return this;
 	}
 
 	public Customer getHolder() {
 		return holder;
 	}
 
-	public CreditCard setHolder(Customer holder) {
+	public void setHolder(Customer holder) {
 		this.holder = holder;
-		
-		return this;
 	}
 
 }

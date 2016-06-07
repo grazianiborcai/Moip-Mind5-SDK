@@ -26,10 +26,12 @@ public class Customer extends HttpsBase {
 	private String fullname;
 	private String email;
 	private String birthDate;
+	private String birthdate;
 	private TaxDocument taxDocument;
 	private Phone phone;
 	private List<FundingInstrument> fundingInstruments;
 	private String createdAt;
+	private List<moip.sdk.base.Error> errors;
 
 	public Customer() {
 		// TODO Auto-generated constructor stub
@@ -115,6 +117,18 @@ public class Customer extends HttpsBase {
 
 	public Customer setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
+		this.birthdate = birthDate;
+
+		return this;
+	}
+	
+	public String getBirthdate() {
+		return birthdate;
+	}
+
+	public Customer setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
+		this.birthDate = birthdate;
 
 		return this;
 	}
@@ -155,6 +169,16 @@ public class Customer extends HttpsBase {
 
 	public Customer setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+
+		return this;
+	}
+	
+	public List<moip.sdk.base.Error> getErrors() {
+		return errors;
+	}
+
+	public Customer setErrors(List<moip.sdk.base.Error> errors) {
+		this.errors = errors;
 
 		return this;
 	}
